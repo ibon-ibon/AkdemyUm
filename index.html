@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>АкадемиУм — тренажёры для ума</title>
+
+  <!-- Стили -->
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/layout.css" />
+  <link rel="stylesheet" href="styles/trainers.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="nav">
+    <div class="brand">
+      <div class="logo">А</div>
+      <span>АкадемиУм</span>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-target="home">Главная</button>
+      <button class="tab" data-target="math-basic">🔢 Арифметика</button>
+      <button class="tab" data-target="math-advanced">📐 Алгебра</button>
+      <button class="tab" data-target="english">🇬🇧 English</button>
+      <button class="tab" data-target="chemistry">⚗️ Химия</button>
+      <button class="tab" data-target="geography">🌍 География</button>
+      <button class="tab" data-target="russian">✍️ Русский</button>
+      <button class="tab" data-target="programming">👨‍💻 Код</button>
+      <button class="tab" data-target="logic">♟️ Логика</button>
+      <button class="tab" data-target="history">📜 История</button>
+      <button class="tab" data-target="achievements">🏆 Достижения</button>
+    </nav>
+    <button class="theme-toggle" id="theme-toggle" title="Переключить тему">☀️ Светлая</button>
+    <button class="reset-btn" id="reset-btn" title="Сбросить весь прогресс">↺ Сброс</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- =============== ГЛАВНАЯ =============== -->
+  <section class="panel active" id="home">
+    <div class="hero">
+      <h1>Прокачай мозг каждый день</h1>
+      <p>Девять тренажёров, система достижений, ежедневный челлендж и графики прогресса. Без регистрации, без интернета, без рекламы.</p>
+      <div class="hero-actions">
+        <button class="btn" data-go="math-basic">Начать тренировку →</button>
+        <button class="btn secondary" id="start-challenge-btn-hero">🎯 Челлендж дня</button>
+      </div>
+    </div>
+
+    <div class="trainer-grid" id="trainer-grid"></div>
+
+    <div class="info-grid">
+      <div class="info-block">
+        <h3>📊 Активность за неделю <span class="badge">последние 7 дней</span></h3>
+        <canvas class="activity-chart" id="activity-chart"></canvas>
+        <div class="chart-legend" id="activity-legend"></div>
+      </div>
+
+      <div class="info-block">
+        <h3>🎯 Челлендж дня</h3>
+        <div id="challenge-card" class="challenge-card"></div>
+      </div>
+
+      <div class="info-block">
+        <h3>🏆 Достижения <span class="badge" id="home-achievements">0/0</span></h3>
+        <div class="achievements-grid" id="achievements-grid"></div>
+        <div class="center" style="margin-top: 14px;">
+          <button class="btn secondary small" data-go="achievements">Все достижения →</button>
+        </div>
+      </div>
+
+      <div class="info-block">
+        <h3>📈 Общая статистика</h3>
+        <div class="stats-bar">
+          <div class="stat"><div class="label">Решено</div><div class="value" id="home-total-correct">0</div></div>
+          <div class="stat"><div class="label">Попыток</div><div class="value" id="home-total-attempts">0</div></div>
+          <div class="stat"><div class="label">Лучшая серия</div><div class="value" id="home-total-streak">0</div></div>
+          <div class="stat"><div class="label">🔥 Streak дней</div><div class="value" id="home-daily-streak">0</div></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer-note">Сделано с <span class="heart">♥</span> для тех, кто любит учиться</p>
+  </section>
+
+  <!-- =============== АРИФМЕТИКА =============== -->
+  <section class="panel" id="math-basic">
+    <div class="trainer">
+      <div class="trainer-head">
+        <div class="icon math">🔢</div>
+        <div>
+          <h2>Арифметика</h2>
+          <div class="sub">Реши как можно больше примеров за отведённое время</div>
+        </div>
+        <div class="level-badge">Базовый</div>
+      </div>
+
+      <div class="controls">
+        <label>Операции
+          <select id="math-ops">
+            <option value="all">Все</option>
+            <option value="add">Только +</option>
+            <option value="sub">Только −</option>
+            <option value="mul">Только ×</option>
+            <option value="div">Только ÷</option>
+          </select>
+        </label>
+        <label>Сложность
+          <select id="math-diff">
+            <option value="easy">Лёгкая (1–10)</option>
+            <option value="medium" selected>Средняя (1–50)</option>
+            <option value="hard">Сложная (1–100)</option>
+          </select>
+        </label>
+        <label>Время (сек)
+          <input type="number" id="math-time" min="30" max="600" step="10" value="60" />
+        </label>
+        <div style="display:flex; align-items:flex-end; gap:10px;">
+          <button class="btn" id="math-start">Старт</button>
+          <button class="btn secondary" id="math-stop" disabled>Стоп</button>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat"><div class="label">Счёт</div><div class="value" id="math-score">0</div></div>
+        <div class="stat"><div class="label">Серия</div><div class="value" id="math-streak">0</div></div>
+        <div class="stat"><div class="label">Ошибки</div><div class="value" id="math-errors">0</div></div>
+        <div class="stat"><div class="label">Таймер</div><div class="value timer" id="math-timer">60</div></div>
+      </div>
+
+      <div class="progress-bar"><div id="math-progress" style="width:0%"></div></div>
+
+      <div id="math-area" class="question-area">
+        <div class="question muted">Нажми «Старт», чтобы начать</div>
+      </div>
+      <div class="feedback center" id="math-feedback"></div>
+    </div>
+  </section>
+
+  <!-- =============== ПРОДВИНУТАЯ МАТЕМАТИКА =============== -->
+  <section class="panel" id="math-advanced">
+    <div class="trainer">
+      <div class="trainer-head">
+        <div class="icon math">📐</div>
+        <div>
+          <h2>Продвинутая математика</h2>
+          <div class="sub">Дроби, проценты, степени, корни, уравнения, последовательности</div>
+        </div>
+        <div class="level-badge">Продвинутый</div>
+      </div>
+
+      <div class="controls">
+        <label>Размер сессии
+          <input type="number" id="math-adv-count" min="5" max="50" step="5" value="15" />
+        </label>
+        <div style="display:flex; align-items:flex-end; gap:10px;">
+          <button class="btn" id="math-adv-start">Старт</button>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat"><div class="label">Вопрос</div><div class="value" id="math-adv-q">0/0</div></div>
+        <div class="stat"><div class="label">Счёт</div><div class="value" id="math-adv-score">0</div></div>
+        <div class="stat"><div class="label">Серия</div><div class="value" id="math-adv-streak">0</div></div>
+      </div>
+
+      <div class="progress-bar"><div id="math-adv-progress" style="width:0%"></div></div>
+
+      <div id="math-adv-area" class="question-area">
+        <div class="question muted">Нажми «Старт»</div>
+      </div>
+      <div class="feedback center" id="math-adv-feedback"></div>
+    </div>
+  </section>
+
+  <!-- =============== ENGLISH =============== -->
+  <section class="panel" id="english">
+    <div class="trainer">
+      <div class="trainer-head">
+        <div class="icon eng">🇬🇧</div>
+        <div>
+          <h2>English Flashcards</h2>
+          <div class="sub">Переведи слово. Кликни на карточку, чтобы увидеть перевод.</div>
+        </div>
+        <div class="level-badge">3 уровня</div>
+      </div>
+
+      <div class="controls">
+        <label>Уровень
+          <select id="eng-level">
+            <option value="a1" selected>Начальный (A1)</option>
+            <option value="a2">Базовый (A2)</option>
+            <option value="b1">Средний (B1)</option>
+          </select>
+        </label>
+        <label>Режим
+          <select id="eng-mode">
+            <option value="en-ru" selected>EN → RU</option>
+            <option value="ru-en">RU → EN</option>
+          </select>
+        </label>
+        <div style="display:flex; align-items:flex-end; gap:10px;">
+          <button class="btn" id="eng-reset">Новая сессия</button>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat"><div class="label">Знаю</div><div class="value good" id="eng-know">0</div></div>
+        <div class="stat"><div class="label">Учу</div><div class="value bad" id="eng-learn">0</div></div>
+        <div class="stat"><div class="label">Прогресс</div><div class="value" id="eng-progress">0/0</div></div>
+      </div>
+
+      <div class="progress-bar"><div id="eng-progress-bar" style="width:0%"></div></div>
+
+      <div class="flash-stage">
+        <div class="flash-card" id="flash-card">
+          <div class="flash-face front">
+            <div class="flash-word" id="flash-front">apple</div>
+            <div class="flash-hint">Кликни, чтобы перевернуть</div>
+          </div>
+          <div class="flash-face back">
+            <div class="flash-trans" id="flash-back">яблоко</div>
+            <div class="flash-hint" id="flash-hint">apple — яблоко</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flash-controls">
+        <button class="btn secondary" id="flash-prev">← Назад</button>
+        <button class="btn warn" id="flash-dunno">Ещё учу</button>
+        <button class="btn success" id="flash-know">Знаю ✓</button>
+        <button class="btn secondary" id="flash-next">Дальше →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== ХИМИЯ =============== -->
+  <section class="panel" id="chemistry">
+    <div class="trainer">
+      <div class="trainer-head">
+        <div class="icon chem">⚗️</div>
+        <div>
+          <h2>Химия</h2>
+          <div class="sub">Выбери правильное название элемента по его символу</div>
+        </div>
+        <div class="level-badge">55 элементов</div>
+      </div>
+
+      <div class="controls">
+        <label>Размер сессии
+          <input type="number" id="chem-count" min="5" max="55" step="5" value="10" />
+        </label>
+        <div style="display:flex; align-items:flex-end; gap:10px;">
+          <button class="btn" id="chem-start">Старт</button>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat"><div class="label">Вопрос</div><div class="value" id="chem-q">0/0</div></div>
+        <div class="stat"><div class="label">Счёт</div><div class="value" id="chem-score">0</div></div>
+        <div class="stat"><div class="label">Серия</div><div class="value" id="chem-streak">0</div></div>
+      </div>
+
+      <div class="progress-bar"><div id="chem-progress" style="width:0%"></div></div>
+
+      <div id="chem-area" class="question-area">
+        <div class="question muted">Нажми «Старт»</div>
+      </div>
+      <div class="feedback center" id="chem-feedback"></div>
+    </div>
+  </section>
+
+  <!-- =============== ГЕОГРАФИЯ =============== -->
+  <section class="panel" id="geography">
+    <div class="trainer">
+      <div class="trainer-head">
+        <div class="icon geo">🌍</div>
+        <div>
+          <h2>География</h2>
+          <div class="sub">Какой город является столицей этой страны?</div>
+        </div>
+        <div class="level-badge">60+ стран</div>
+      </div>
+
+      <div class="controls">
+        <label>Регион
+          <select id="geo-region">
+            <option value="all" selected>Весь мир</option>
+            <option value="europe">Европа</option>
+            <option value="asia">Азия</option>
+            <option value="americas">Америка</option>
+            <option value="africa">Африка</option>
+            <option value="oceania">Океания</option>
+          </select>
+        </label>
+        <label>Размер сессии
+          <input type="number" id="geo-count" min="5" max="60" step="5" value="10" />
+        </label>
+        <div style="display:flex; align-items:flex-end; gap:10px;">
+          <button class="btn" id="geo-start">Старт</button>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat"><div class="label">Вопрос</div><div class="value" id="geo-q">0/0</div></div>
+        <div class="stat"><div class="label">Счёт</div><div class="value" id="geo-score">0</div></div>
+        <div class="stat"><div class="label">Серия</div><div class="value" id="geo-streak">0</div></div>
+      </div>
+
+      <div class="progress-bar"><div id="geo-progress" style="width:0%"></div></div>
+
+      <div id="geo-area" class="question-area">
+        <div class="question muted">Нажми «Старт»</div>
+      </div>
+      <div class="feedback center" id="geo-feedback"></div>
+    </div>
+  </section>
+
+  <!-- =============== РУССКИЙ =============== -->
+  <section class="panel" id="russian">
+    <div class="trainer">
+      <div class="trainer-head">
+        <div class="icon rus">✍️</div>
+        <div>
+          <h2>Русский язык</h2>
+          <div class="sub">Вставь пропущенную букву в слове</div>
+        </div>
+        <div class="level-badge">50+ правил</div>
+      </div>
+
+      <div class="controls">
+        <label>Размер сессии
+          <input type="number" id="rus-count" min="5" max="50" step="5" value="10" />
+        </label>
+        <div style="display:flex; align-items:flex-end; gap:10px;">
+          <button class="btn" id="rus-start">Старт</button>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat"><div class="label">Вопрос</div><div class="value" id="rus-q">0/0</div></div>
+        <div class="stat"><div class="label">Счёт</div><div class="value" id="rus-score">0</div></div>
+        <div class="stat"><div class="label">Без ошибок</div><div class="value" id="rus-streak">0</div></div>
+      </div>
+
+      <div class="progress-bar"><div id="rus-progress" style="width:0%"></div></div>
+
+      <div id="rus-area" class="question-area">
+        <div class="question muted">Нажми «Старт»</div>
+      </div>
+      <div class="feedback center" id="rus-feedback"></div>
+    </div>
+  </section>
+
+  <!-- =============== ПРОГРАММИРОВАНИЕ =============== -->
+  <section class="panel" id="programming">
+    <div class="trainer">
+      <div class="trainer-head">
+        <div class="icon program">👨‍💻</div>
+        <div>
+          <h2>Программирование</h2>
+          <div class="sub">Что выведет этот код? Предскажи результат</div>
+        </div>
+        <div class="level-badge">JavaScript</div>
+      </div>
+
+      <div class="controls">
+        <label>Уровень
+          <select id="prog-level">
+            <option value="beginner">Начинающий</option>
+            <option value="intermediate" selected>Средний</option>
+            <option value="advanced">Продвинутый</option>
+          </select>
+        </label>
+        <label>Размер сессии
+          <input type="number" id="prog-count" min="5" max="30" step="1" value="10" />
+        </label>
+        <div style="display:flex; align-items:flex-end; gap:10px;">
+          <button class="btn" id="prog-start">Старт</button>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat"><div class="label">Вопрос</div><div class="value" id="prog-q">0/0</div></div>
+        <div class="stat"><div class="label">Счёт</div><div class="value" id="prog-score">0</div></div>
+        <div class="stat"><div class="label">Серия</div><div class="value" id="prog-streak">0</div></div>
+      </div>
+
+      <div class="progress-bar"><div id="prog-progress" style="width:0%"></div></div>
+
+      <div id="prog-area" class="question-area">
+        <div class="question muted">Нажми «Старт»</div>
+      </div>
+      <div class="feedback center" id="prog-feedback"></div>
+    </div>
+  </section>
+
+  <!-- =============== ЛОГИКА =============== -->
+  <section class="panel" id="logic">
+    <div class="trainer">
+      <div class="trainer-head">
+        <div class="icon logic">♟️</div>
+        <div>
+          <h2>Логика</h2>
+          <div class="sub">Последовательности, аналогии, паттерны</div>
+        </div>
+        <div class="level-badge">IQ-стиль</div>
+      </div>
+
+      <div class="controls">
+        <label>Размер сессии
+          <input type="number" id="logic-count" min="5" max="40" step="5" value="10" />
+        </label>
+        <div style="display:flex; align-items:flex-end; gap:10px;">
+          <button class="btn" id="logic-start">Старт</button>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat"><div class="label">Вопрос</div><div class="value" id="logic-q">0/0</div></div>
+        <div class="stat"><div class="label">Счёт</div><div class="value" id="logic-score">0</div></div>
+        <div class="stat"><div class="label">Серия</div><div class="value" id="logic-streak">0</div></div>
+      </div>
+
+      <div class="progress-bar"><div id="logic-progress" style="width:0%"></div></div>
+
+      <div id="logic-area" class="question-area">
+        <div class="question muted">Нажми «Старт»</div>
+      </div>
+      <div class="feedback center" id="logic-feedback"></div>
+    </div>
+  </section>
+
+  <!-- =============== ИСТОРИЯ =============== -->
+  <section class="panel" id="history">
+    <div class="trainer">
+      <div class="trainer-head">
+        <div class="icon history">📜</div>
+        <div>
+          <h2>История</h2>
+          <div class="sub">Даты событий, исторические личности, империи</div>
+        </div>
+        <div class="level-badge">40+ задач</div>
+      </div>
+
+      <div class="controls">
+        <label>Категория
+          <select id="hist-category">
+            <option value="all" selected>Все темы</option>
+            <option value="events">События и даты</option>
+            <option value="persons">Личности</option>
+            <option value="empires">Империи</option>
+          </select>
+        </label>
+        <label>Размер сессии
+          <input type="number" id="hist-count" min="5" max="40" step="5" value="10" />
+        </label>
+        <div style="display:flex; align-items:flex-end; gap:10px;">
+          <button class="btn" id="hist-start">Старт</button>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat"><div class="label">Вопрос</div><div class="value" id="hist-q">0/0</div></div>
+        <div class="stat"><div class="label">Счёт</div><div class="value" id="hist-score">0</div></div>
+        <div class="stat"><div class="label">Серия</div><div class="value" id="hist-streak">0</div></div>
+      </div>
+
+      <div class="progress-bar"><div id="hist-progress" style="width:0%"></div></div>
+
+      <div id="hist-area" class="question-area">
+        <div class="question muted">Нажми «Старт»</div>
+      </div>
+      <div class="feedback center" id="hist-feedback"></div>
+    </div>
+  </section>
+
+  <!-- =============== ДОСТИЖЕНИЯ =============== -->
+  <section class="panel" id="achievements">
+    <div class="trainer">
+      <div class="trainer-head">
+        <div class="icon" style="background: linear-gradient(135deg, #ffb84d, #ff7ab6);">🏆</div>
+        <div>
+          <h2>Достижения</h2>
+          <div class="sub">Собирай бейджи за свои успехи</div>
+        </div>
+        <div class="level-badge" id="ach-progress">0 / 0</div>
+      </div>
+
+      <div class="achievements-grid" id="achievements-grid-full"></div>
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<!-- ===== Скрипты (порядок важен) ===== -->
+<!-- core -->
+<script src="js/utils.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/achievements.js"></script>
+<script src="js/charts.js"></script>
+
+<!-- данные -->
+<script src="js/data/words.js"></script>
+<script src="js/data/elements.js"></script>
+<script src="js/data/countries.js"></script>
+<script src="js/data/russian.js"></script>
+<script src="js/data/programming.js"></script>
+<script src="js/data/logic.js"></script>
+<script src="js/data/history.js"></script>
+
+<!-- тренеры -->
+<script src="js/trainers/index.js"></script>
+<script src="js/trainers/math-basic.js"></script>
+<script src="js/trainers/math-advanced.js"></script>
+<script src="js/trainers/english.js"></script>
+<script src="js/trainers/chemistry.js"></script>
+<script src="js/trainers/geography.js"></script>
+<script src="js/trainers/russian.js"></script>
+<script src="js/trainers/programming.js"></script>
+<script src="js/trainers/logic.js"></script>
+<script src="js/trainers/history.js"></script>
+
+<!-- главный -->
+<script src="js/app.js"></script>
+
+</body>
+</html>
